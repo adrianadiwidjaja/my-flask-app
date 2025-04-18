@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">{{ post.title }}</h1>
+                    <p class="card-text">{{ post.content }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Posted by <a href="{{ url_for('auth.user_profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                            on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            in <a href="{{ url_for('main.category_posts', category_id=post.category.id) }}">{{ post.category.name }}</a>
+                        </small>
+                    </p>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user == post.author %}
+                            <a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="btn btn-primary">Edit Post</a>
+                            <a href="{{ url_for('main.delete_post', post_id=post.id) }}" class="btn btn-danger">Delete Post</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Comments</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.is_authenticated %}
+                        <form method="POST" action="{{ url_for('main.comment_post', post_id=post.id) }}">
+                            <div class="mb-3">
+                                <textarea class="form-control" name="content" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Comment</button>
+                        </form>
+                    {% endif %}
+
+                    {% for comment in post.comments %}
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <p class="card-text">{{ comment.content }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        By <a href="{{ url_for('auth.user_profile', username=comment.author.username) }}">{{ comment.author.username }}</a>
+                                        on {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
