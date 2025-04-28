@@ -1,0 +1,10 @@
+cd my-flask-app
+mkdir firebase
+Created firebase/firebase.js
+Created firebase/pushData.js
+mkdir tests_node
+Created tests_node/pushData.test.js
+Created package.json
+npm install
+npm test
+pytest -q
